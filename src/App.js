@@ -9,6 +9,8 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   const [pokemonData, setPokemondata] = useState([]);
+  const [nextUrl, setNextUrl] = useState("");
+  const [prevUrl, setPrevUrl] = useState("");
 
   const loadPokemon = async (data) => {
     let _pokemonData = await Promise.all(
@@ -24,13 +26,31 @@ function App() {
     const fetchPokemondata = async () => {
       let res = await getAllPokemon(initialUrl);
       loadPokemon(res.results);
-      // console.log(res.results);
+      console.log(res);
+      setPrevUrl(res.previous);
+      setNextUrl(res.next);
       setLoading(false);
     };
     fetchPokemondata();
   }, []);
 
-  console.log(pokemonData);
+  const handlePrevPage = async () => {
+    setLoading(true);
+    let data = await getAllPokemon(prevUrl);
+    await loadPokemon(data.results);
+    setPrevUrl(data.previous);
+    setNextUrl(data.next);
+    setLoading(false);
+  };
+
+  const handleNextPage = async () => {
+    setLoading(true);
+    let data = await getAllPokemon(nextUrl);
+    await loadPokemon(data.results);
+    setPrevUrl(data.previous);
+    setNextUrl(data.next);
+    setLoading(false);
+  };
 
   return (
     <>
@@ -45,6 +65,8 @@ function App() {
                 return <Card key={i} pokemon={pokemon} />;
               })}
             </div>
+            {prevUrl && <button onClick={handlePrevPage}>前へ</button>}
+            <button onClick={handleNextPage}>次へ</button>
           </>
         )}
       </div>
