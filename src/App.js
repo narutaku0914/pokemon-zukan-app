@@ -26,7 +26,6 @@ function App() {
     const fetchPokemondata = async () => {
       let res = await getAllPokemon(initialUrl);
       loadPokemon(res.results);
-      console.log(res);
       setPrevUrl(res.previous);
       setNextUrl(res.next);
       setLoading(false);
@@ -65,8 +64,10 @@ function App() {
                 return <Card key={i} pokemon={pokemon} />;
               })}
             </div>
-            {prevUrl && <button onClick={handlePrevPage}>前へ</button>}
-            <button onClick={handleNextPage}>次へ</button>
+            <div className="btn">
+              {prevUrl && <button onClick={handlePrevPage}>前へ</button>}
+              <button onClick={handleNextPage}>次へ</button>
+            </div>
           </>
         )}
       </div>
